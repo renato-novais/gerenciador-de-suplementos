@@ -1,3 +1,5 @@
-<app-menu></app-menu>
+<app-menu *ngIf="(!isEntrarRoute)"></app-menu>
+
 <router-outlet></router-outlet>
-<app-rodape></app-rodape>
+
+<app-rodape *ngIf="(!isEntrarRoute)"></app-rodape>
