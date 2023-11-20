@@ -1,0 +1,129 @@
+<div class="card">
+  <p-toast></p-toast>
+  <p-toolbar styleClass="mb-4 gap-2">
+      <ng-template pTemplate="left">
+          <button pButton pRipple label="Novo" icon="pi pi-plus" class="p-button-success mr-2" (click)="openNew()"></button>
+          <button pButton pRipple icon="pi pi-trash" class="p-button-danger" (click)="deleteSelectedProducts()" [disabled]="!selectedProducts || !selectedProducts.length"></button>
+        </ng-template>
+        <ng-template pTemplate="right">
+          <button pButton pRipple icon="pi pi-search" class="p-button-info" label="Pesquisar" (click)="pesquisarSuplementos()"></button>
+        </ng-template>
+  </p-toolbar>
+
+  <p-table
+      #dt
+      [value]="products"
+      [rows]="10"
+      [paginator]="true"
+      [globalFilterFields]="['name', 'country.name', 'representative.name', 'status']"
+      [tableStyle]="{ 'min-width': '75rem' }"
+      [(selection)]="selectedProducts"
+      [rowHover]="true"
+      dataKey="id"
+      currentPageReportTemplate="Mostrando {first} a {last} linhas de um total de {totalRecords} linhas."
+      [showCurrentPageReport]="true"
+  >
+      <ng-template pTemplate="caption">
+          <div class="flex align-items-center justify-content-between">
+              <h5 class="m-0">Gerenciador de Suplementos</h5>
+              <span class="p-input-icon-left">
+                  <i class="pi pi-search"></i>
+                  <input pInputText type="text" (input)="dt.filterGlobal($event, 'contains')" placeholder="Buscar..." />
+              </span>
+          </div>
+      </ng-template>
+      <ng-template pTemplate="header">
+          <tr>
+              <th style="width: 4rem">
+                  <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
+              </th>
+              <th pSortableColumn="nome" style="min-width:15rem">Nome<p-sortIcon field="nome"></p-sortIcon></th>
+              <th pSortableColumn="marca" style="min-width:15rem">Marca<p-sortIcon field="marca"></p-sortIcon></th>
+              <th pSortableColumn="categoria" style="min-width:10rem">Categoria<p-sortIcon field="categoria"></p-sortIcon></th>
+              <th pSortableColumn="statusEstoque" style="min-width:10rem">Status<p-sortIcon field="statusEstoque"></p-sortIcon></th>
+              <th pSortableColumn="quantidade">Quantidade <p-sortIcon field="quantidade"></p-sortIcon></th>
+              <th></th>
+          </tr>
+      </ng-template>
+      <ng-template pTemplate="body" let-product>
+          <tr>
+              <td>
+                  <p-tableCheckbox [value]="product"></p-tableCheckbox>
+              </td>
+              <td>{{ product.nome }}</td>
+              <td>{{ product.marca }}</td>
+              <td>{{ product.categoria}}</td>
+              <td>{{ product.statusEstoque }}</td>
+              <td>{{ product.quantidade }}</td>
+              <td>
+                  <button pButton pRipple icon="pi pi-pencil" class="p-button-rounded p-button-success mr-2" (click)="editProduct(product)"></button>
+                  <button pButton pRipple icon="pi pi-trash" class="p-button-rounded p-button-warning" (click)="deleteProduct(product)"></button>
+              </td>
+          </tr>
+      </ng-template>
+  </p-table>
+</div>
+<p-dialog [(visible)]="productDialog" [style]="{ width: '450px' }" header="Detalhes do Suplemento" [modal]="true" styleClass="p-fluid">
+  <ng-template pTemplate="content">
+      <div class="field">
+          <label for="name">Nome</label>
+          <input type="text" pInputText id="nome" required autofocus />
+          <small class="p-error" *ngIf="submitted && !product.name">Nome é obrigatório.</small>
+      </div>
+      <div class="field">
+          <label for="description">Descrição</label>
+          <textarea id="description" pInputTextarea required rows="3" cols="20"></textarea>
+      </div>
+
+      <div class="field">
+        <label for="name">Marca</label>
+        <input type="text" pInputText id="marca" />
+      </div>
+
+      <div class="field">
+          <label class="mb-3">Categoria</label>
+          <div class="formgrid grid">
+              <div class="field-radiobutton col-6">
+                  <p-radioButton id="category1" name="categoria" value="proteina"></p-radioButton>
+                  <label for="category1">Proteína</label>
+              </div>
+              <div class="field-radiobutton col-6">
+                  <p-radioButton id="category2" name="categoria" value="aminoacido"></p-radioButton>
+                  <label for="category2">Aminoácidos</label>
+              </div>
+              <div class="field-radiobutton col-6">
+                  <p-radioButton id="category3" name="categoria" value="termogenico" ></p-radioButton>
+                  <label for="category3">Termogênico</label>
+              </div>
+              <div class="field-radiobutton col-6">
+                  <p-radioButton id="category4" name="categoria" value="outro" ></p-radioButton>
+                  <label for="category4">Outro</label>
+              </div>
+          </div>
+      </div>
+
+      <div class="formgrid grid">
+        <div class="field col">
+          <label for="quantidade">Quantidade</label>
+          <p-inputNumber id="quantidade" ></p-inputNumber>
+        </div>
+        <div class="field col">
+          <label for="statusEstoque">Status de Estoque</label>
+          <p-dropdown inputId="statusEstoque" [options]="statuses">
+              <ng-template pTemplate="selectedItem">
+              </ng-template>
+              <ng-template let-option pTemplate="item">
+              </ng-template>
+          </p-dropdown>
+        </div>
+
+      </div>
+  </ng-template>
+
+  <ng-template pTemplate="footer">
+      <button pButton pRipple label="Cancelar" icon="pi pi-times" class="p-button-text" (click)="hideDialog()"></button>
+      <button pButton pRipple label="Salvar" icon="pi pi-check" class="p-button-text" (click)="saveProduct()"></button>
+  </ng-template>
+</p-dialog>
+
+<p-confirmDialog [style]="{ width: '450px' }"></p-confirmDialog>

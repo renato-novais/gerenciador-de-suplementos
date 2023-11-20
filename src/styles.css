@@ -2,3 +2,15 @@
 @import "primeng/resources/themes/lara-light-blue/theme.css";
 @import "primeng/resources/primeng.css";
 @import "primeicons/primeicons.css";
+
+:root {
+  --cor-verde: #A7C14C;
+  --cor-azul-esverdeado: #0A7C6E;
+  --cor-preto: #000000;
+  --cor-branco: #FFFFFF;
+  --cor-cinza-claro: #FAFAFA;
+}
+
+.p-button-azul-esverdeado {
+  background-color: var(--cor-azul-esverdeado);
+}
